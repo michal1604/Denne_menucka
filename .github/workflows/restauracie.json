@@ -1,0 +1,56 @@
+[
+  {
+    "id": "srdcovka",
+    "nazov": "Srdcovka Urban Pub",
+    "adresa": "Račianska 26/E",
+    "cas": "11:00 – 14:00",
+    "url": "https://urbanpub.sk/",
+    "zdroje": [
+      {
+        "typ": "pdf-odkaz",
+        "stranka": "https://urbanpub.sk/",
+        "vzor": "OBEDOV.*\\.pdf"
+      }
+    ]
+  },
+  {
+    "id": "spilka",
+    "nazov": "Spilka beer & restaurant",
+    "adresa": "Legionárska 8",
+    "cas": "11:00 – 14:00",
+    "url": "https://www.spilkarestaurant.sk/",
+    "zdroje": [
+      {
+        "typ": "pdf-odkaz",
+        "stranka": "https://www.spilkarestaurant.sk/",
+        "vzor": "[Dd]enne-menu.*\\.pdf"
+      },
+      {
+        "typ": "pdf-odkaz",
+        "stranka": "https://www.spilkarestaurant.sk/ponuka/",
+        "vzor": "[Dd]enne-menu.*\\.pdf"
+      },
+      {
+        "typ": "html",
+        "url": "https://restauracie.sme.sk/restauracia/spilka-beer-restaurant_11351-nove-mesto_2653/denne-menu"
+      }
+    ]
+  },
+  {
+    "id": "soupa",
+    "nazov": "Soupa Bistro",
+    "adresa": "Račianska 22/A",
+    "cas": "11:00 – 15:00",
+    "url": "https://soupa.sk/denne-menu-take-away.html",
+    "zdroje": [
+      {
+        "typ": "html",
+        "url": "https://restauracie.sme.sk/restauracia/soupa-racianska_11534-nove-mesto_2653/denne-menu"
+      },
+      {
+        "typ": "html",
+        "url": "https://soupa.sk/denne-menu-take-away.html"
+      }
+    ]
+  }
+]
