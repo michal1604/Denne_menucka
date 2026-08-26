@@ -1,1 +1,49 @@
-
+{
+  "datum": "2026-08-26",
+  "den": "streda",
+  "aktualizovane": "2026-08-26T09:17:00+02:00",
+  "restauracie": [
+    {
+      "id": "srdcovka",
+      "nazov": "Srdcovka Urban Pub",
+      "adresa": "Račianska 26/E",
+      "cas": "11:00 – 14:00",
+      "url": "https://urbanpub.sk/",
+      "stav": "ok",
+      "polievka": { "nazov": "Slepačí vývar s rezancami", "cena": 1.6, "alergeny": [1, 3, 9] },
+      "jedla": [
+        { "c": 1, "nazov": "Vyprážaný bravčový rezeň, zemiaková kaša, uhorka", "cena": 8.4, "alergeny": [1, 3, 7], "veg": false },
+        { "c": 2, "nazov": "Kuracie prsia na hríboch, dusená ryža", "cena": 7.9, "alergeny": [7], "veg": false },
+        { "c": 3, "nazov": "Špenátové halušky s bryndzou a smotanou", "cena": 7.2, "alergeny": [1, 3, 7], "veg": true }
+      ]
+    },
+    {
+      "id": "spilka",
+      "nazov": "Spilka beer & restaurant",
+      "adresa": "Legionárska 8",
+      "cas": "11:00 – 14:00",
+      "url": "https://www.spilkarestaurant.sk/",
+      "stav": "ok",
+      "polievka": { "nazov": "Ostrokyslá polievka s tofu", "cena": 1.79, "alergeny": [1, 6, 9] },
+      "jedla": [
+        { "c": 1, "nazov": "Kurací rezeň v pivnom cestíčku, opekané zemiaky, tatárska omáčka", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": false },
+        { "c": 2, "nazov": "Lasagne bolognese s mletým hovädzím mäsom", "cena": 7.9, "alergeny": [1, 3, 7, 9], "veg": false },
+        { "c": 3, "nazov": "Vyprážaný karfiol s maslovými zemiakmi", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": true }
+      ]
+    },
+    {
+      "id": "soupa",
+      "nazov": "Soupa Bistro",
+      "adresa": "Račianska 22/A",
+      "cas": "11:00 – 15:00",
+      "url": "https://soupa.sk/denne-menu-take-away.html",
+      "stav": "ok",
+      "polievka": { "nazov": "Šošovicová s klobásou", "cena": 0.6, "alergeny": [1] },
+      "jedla": [
+        { "c": 1, "nazov": "Bravčová krkovička, tarhoňa, viedenská cibuľa", "cena": 7.5, "alergeny": [1, 10], "veg": false },
+        { "c": 2, "nazov": "Perkelt z hlivy s haluškami", "cena": 7.5, "alergeny": [1, 3, 7], "veg": true },
+        { "c": 3, "nazov": "Špagety bolognese so syrom", "cena": 7.1, "alergeny": [1, 7], "veg": false }
+      ]
+    }
+  ]
+}
