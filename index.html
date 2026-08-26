@@ -115,11 +115,10 @@ const VLOZENE = {
       "cas": "11:00 – 14:00",
       "url": "https://urbanpub.sk/",
       "stav": "ok",
-      "polievka": { "nazov": "Slepačí vývar s rezancami", "cena": 1.6, "alergeny": [1, 3, 9] },
+      "polievky": [{ "nazov": "Slepačí vývar s rezancami", "cena": 1.6, "alergeny": [1, 3, 9] }],
       "jedla": [
-        { "c": 1, "nazov": "Vyprážaný bravčový rezeň, zemiaková kaša, uhorka", "cena": 8.4, "alergeny": [1, 3, 7], "veg": false },
-        { "c": 2, "nazov": "Kuracie prsia na hríboch, dusená ryža", "cena": 7.9, "alergeny": [7], "veg": false },
-        { "c": 3, "nazov": "Špenátové halušky s bryndzou a smotanou", "cena": 7.2, "alergeny": [1, 3, 7], "veg": true }
+        { "c": "1", "nazov": "Vyprážaný bravčový rezeň, zemiaková kaša, uhorka", "cena": 8.4, "alergeny": [1, 3, 7], "veg": false },
+        { "c": "2", "nazov": "Kuracie prsia na hríboch, dusená ryža", "cena": 7.9, "alergeny": [7], "veg": false }
       ]
     },
     {
@@ -129,11 +128,15 @@ const VLOZENE = {
       "cas": "11:00 – 14:00",
       "url": "https://www.spilkarestaurant.sk/",
       "stav": "ok",
-      "polievka": { "nazov": "Ostrokyslá polievka s tofu", "cena": 1.79, "alergeny": [1, 6, 9] },
+      "polievky": [
+        { "nazov": "Šošovicová polievka s klobáskou", "cena": 1.99, "alergeny": [9] },
+        { "nazov": "Hovädzí vývar s rezancami, zeleninou, mäsom", "cena": 1.99, "alergeny": [1, 3, 9] }
+      ],
       "jedla": [
-        { "c": 1, "nazov": "Kurací rezeň v pivnom cestíčku, opekané zemiaky, tatárska omáčka", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": false },
-        { "c": 2, "nazov": "Lasagne bolognese s mletým hovädzím mäsom", "cena": 7.9, "alergeny": [1, 3, 7, 9], "veg": false },
-        { "c": 3, "nazov": "Vyprážaný karfiol s maslovými zemiakmi", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": true }
+        { "c": "TIP", "nazov": "Risotto s cuketou a paradajkami, s kúskami kuracieho mäska a parmezánom", "cena": 8.9, "alergeny": [7, 9], "veg": false },
+        { "c": "1", "nazov": "Vyprážaný morčací rezeň v syrovom cestíčku so zemiakovou kašou", "cena": 7.9, "alergeny": [1, 3, 7], "veg": false },
+        { "c": "2", "nazov": "Vyprážané šampiňóny s maslovými zemiakmi a domácou tatárskou omáčkou", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": true },
+        { "c": "3", "nazov": "Vyprážaný syr s hranolkami a domácou tatárskou omáčkou", "cena": 7.9, "alergeny": [1, 3, 7, 10], "veg": true }
       ]
     },
     {
@@ -142,13 +145,9 @@ const VLOZENE = {
       "adresa": "Račianska 22/A",
       "cas": "11:00 – 15:00",
       "url": "https://soupa.sk/denne-menu-take-away.html",
-      "stav": "ok",
-      "polievka": { "nazov": "Šošovicová s klobásou", "cena": 0.6, "alergeny": [1] },
-      "jedla": [
-        { "c": 1, "nazov": "Bravčová krkovička, tarhoňa, viedenská cibuľa", "cena": 7.5, "alergeny": [1, 10], "veg": false },
-        { "c": 2, "nazov": "Perkelt z hlivy s haluškami", "cena": 7.5, "alergeny": [1, 3, 7], "veg": true },
-        { "c": 3, "nazov": "Špagety bolognese so syrom", "cena": 7.1, "alergeny": [1, 7], "veg": false }
-      ]
+      "stav": "chyba",
+      "polievky": [],
+      "jedla": []
     }
   ]
 };
@@ -172,12 +171,13 @@ function hlavicka(data){
 }
 
 function riadok(j, jePolievka){
+  const stitok = jePolievka ? "P" : (j.c === "TIP" ? "★" : esc(j.c) + ".");
   const kusy = [];
   if (j.veg) kusy.push('<span class="veg">veg</span>');
   if (j.alergeny && j.alergeny.length) kusy.push("alergény " + j.alergeny.join(", "));
   const spodok = kusy.length ? `<div class="j-spodok">${kusy.join("")}</div>` : "";
   return `<li class="jedlo">
-    <span class="j-c${jePolievka ? " p" : ""}">${jePolievka ? "P" : esc(j.c) + "."}</span>
+    <span class="j-c${jePolievka || j.c === "TIP" ? " p" : ""}">${stitok}</span>
     <span class="j-telo"><span class="j-nazov">${esc(j.nazov)}</span>${spodok}</span>
     <span class="j-cena">${eur(j.cena)}</span>
   </li>`;
@@ -191,7 +191,9 @@ function karta(r, i){
       <div class="meno"><h2>${esc(r.nazov)}</h2><div class="meta">${meta}</div></div>
     </div><div class="perf"></div>`;
 
-  if (r.stav !== "ok" || (!r.jedla?.length && !r.polievka)){
+  const polievky = r.polievky || (r.polievka ? [r.polievka] : []);
+
+  if (r.stav !== "ok" || (!r.jedla?.length && !polievky.length)){
     return `<article class="karta nedostupna">${hlava}
       <p class="hlaska">${r.stav === "zatvorene"
         ? "Dnes zatvorené."
@@ -201,7 +203,7 @@ function karta(r, i){
   }
 
   const riadky = [];
-  if (r.polievka) riadky.push(riadok(r.polievka, true));
+  polievky.forEach(p => riadky.push(riadok(p, true)));
   (r.jedla || []).forEach(j => riadky.push(riadok(j, false)));
   const ceny = (r.jedla || []).map(j => Number(j.cena)).filter(c => c > 0);
 
