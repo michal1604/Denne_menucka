@@ -36,13 +36,33 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scraper/scrape.mjs
 
+      # Do repa môžeš medzitým nahrať aj ty. Preto sa pred odoslaním
+      # vždy dotiahne aktuálny stav a commit sa naň prešije (rebase).
+      # Keby to niekto stihol znova, skúsi sa to ešte dvakrát.
       - name: Uložiť výsledok do repa
         run: |
           git config user.name "menu-bot"
           git config user.email "bot@users.noreply.github.com"
           git add data/menu.json
-          git diff --staged --quiet || git commit -m "menu $(date +%F)"
-          git push
+
+          if git diff --staged --quiet; then
+            echo "Menu sa oproti uloženému nezmenilo, nie je čo commitovať."
+            exit 0
+          fi
+
+          git commit -m "menu $(date +%F)"
+
+          for pokus in 1 2 3; do
+            if git pull --rebase --autostash origin "$GITHUB_REF_NAME" && git push; then
+              echo "Uložené na pokus $pokus."
+              exit 0
+            fi
+            echo "Pokus $pokus zlyhal, skúšam o 5 sekúnd znova…"
+            sleep 5
+          done
+
+          echo "Nepodarilo sa uložiť ani na tretí pokus."
+          exit 1
 
       # Poistka beží AŽ PO uložení. Keby bežala pred ním, jeden zlyhaný
       # podnik by zhodil celý beh a na web by sa nedostali ani tie,
