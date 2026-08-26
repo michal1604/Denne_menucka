@@ -9,7 +9,7 @@
       {
         "typ": "pdf-odkaz",
         "stranka": "https://urbanpub.sk/",
-        "vzor": "OBEDOV.*\\.pdf"
+        "vzor": "OBEDOV"
       }
     ]
   },
@@ -23,18 +23,10 @@
       {
         "typ": "pdf-odkaz",
         "stranka": "https://www.spilkarestaurant.sk/",
-        "vzor": "[Dd]enne-menu.*\\.pdf"
-      },
-      {
-        "typ": "pdf-odkaz",
-        "stranka": "https://www.spilkarestaurant.sk/ponuka/",
-        "vzor": "[Dd]enne-menu.*\\.pdf"
-      },
-      {
-        "typ": "html",
-        "url": "https://restauracie.sme.sk/restauracia/spilka-beer-restaurant_11351-nove-mesto_2653/denne-menu"
+        "vzor": "denne-menu"
       }
-    ]
+    ],
+    "poznamka": "Okrem číslovaných jedál majú aj jedlá označené TIP a dve polievky denne."
   },
   {
     "id": "soupa",
@@ -44,13 +36,11 @@
     "url": "https://soupa.sk/denne-menu-take-away.html",
     "zdroje": [
       {
-        "typ": "html",
-        "url": "https://restauracie.sme.sk/restauracia/soupa-racianska_11534-nove-mesto_2653/denne-menu"
-      },
-      {
-        "typ": "html",
-        "url": "https://soupa.sk/denne-menu-take-away.html"
+        "typ": "prehliadac",
+        "url": "https://soupa.sk/denne-menu-take-away.html",
+        "vyrez": "body"
       }
-    ]
+    ],
+    "poznamka": "Menu sa načítava cez JavaScript. Stránka obsahuje aj staré oznamy o zatvorení z minulých rokov — riaď sa iba dnešným dátumom, staré oznamy ignoruj. Ceny bývajú uvedené ako '0,60 € / 2,80 €' — polievka k menu a samostatne."
   }
 ]

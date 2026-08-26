@@ -1,8 +1,5 @@
-// Stiahne zdroje reštaurácií, nechá ich spracovať cez Claude API
-// a uloží výsledok do data/menu.json
-//
-// Spustenie:  ANTHROPIC_API_KEY=sk-... node scraper/scrape.mjs
-// Node 20+ (kvôli vstavanému fetch)
+// Stiahne zdroje podnikov a uloží výsledok do data/menu.json
+//   ANTHROPIC_API_KEY=sk-... node scraper/scrape.mjs        (Node 20+)
 
 import { readFile, writeFile } from "node:fs/promises";
 import { extrahuj, DATUM, DEN } from "./ai.mjs";
@@ -10,34 +7,37 @@ import { extrahuj, DATUM, DEN } from "./ai.mjs";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
-const nacitaj = (url, ...typy) =>
-  fetch(url, { headers: { "User-Agent": UA, "Accept": typy.join(",") || "*/*" },
-               redirect: "follow", signal: AbortSignal.timeout(25000) });
+const nacitaj = url =>
+  fetch(url, { headers: { "User-Agent": UA }, redirect: "follow",
+               signal: AbortSignal.timeout(25000) });
 
-/* ---------- objavenie PDF odkazu na stránke ---------- */
-// PDF-ká majú v názve dátum týždňa, takže sa nesmú zadávať natvrdo.
-// Namiesto toho prehľadáme stránku a vezmeme najnovší zhodný odkaz.
+/* ---------- objavenie PDF odkazu na stránke ----------
+   PDF-ká majú v názve dátum týždňa, preto sa nesmú zadávať natvrdo.
+   Vytiahneme VŠETKY odkazy a až potom filtrujeme — vzor sa nikdy
+   nesmie skladať do jedného výrazu s okolím, lebo ".*" prekročí
+   úvodzovky a zachytí niekoľko odkazov naraz. */
 async function najdiPdf(stranka, vzor) {
-  const res = await nacitaj(stranka, "text/html");
+  const res = await nacitaj(stranka);
   if (!res.ok) throw new Error(`stránka HTTP ${res.status}`);
   const html = await res.text();
 
-  const re = new RegExp(`href\\s*=\\s*["']([^"']*${vzor}[^"']*)["']`, "gi");
-  const odkazy = [...html.matchAll(re)].map(m => new URL(m[1], res.url).href);
-  if (!odkazy.length) throw new Error(`na stránke nie je odkaz podľa vzoru ${vzor}`);
+  const vsetky = [...html.matchAll(/href\s*=\s*["']([^"'\s]+)["']/gi)].map(m => m[1]);
+  const re = new RegExp(vzor, "i");
+  const zhody = [...new Set(vsetky.filter(u => re.test(u) && /\.pdf(\?|#|$)/i.test(u)))]
+    .map(u => new URL(u, res.url).href);
 
-  // pri viacerých vyberieme ten s najvyšším číslom v názve (najnovší týždeň)
+  if (!zhody.length) throw new Error(`na stránke nie je PDF podľa vzoru ${vzor}`);
+
+  // pri viacerých vezmeme ten s najvyšším číslom v ceste (najnovší týždeň)
   const skore = u => (u.match(/\d+/g) || []).map(Number).reduce((a, b) => a * 1000 + b, 0);
-  return [...new Set(odkazy)].sort((a, b) => skore(b) - skore(a))[0];
+  return zhody.sort((a, b) => skore(b) - skore(a))[0];
 }
 
 /* ---------- načítanie jedného zdroja ---------- */
 async function zdrojNaVstup(z) {
-  if (z.typ === "rucne") {
-    const f = `data/rucne/${z.id}.json`;
-    const obsah = JSON.parse(await readFile(f, "utf8"));
-    if (obsah.datum !== DATUM) throw new Error(`ručný zápis je z ${obsah.datum}, nie z dneška`);
-    return { hotove: obsah };
+  if (z.typ === "prehliadac") {
+    const { cezPrehliadac } = await import("./prehliadac.mjs");
+    return cezPrehliadac(z);
   }
 
   const url = z.typ === "pdf-odkaz" ? await najdiPdf(z.stranka, z.vzor) : z.url;
@@ -45,7 +45,7 @@ async function zdrojNaVstup(z) {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
   const ct = (res.headers.get("content-type") || "").toLowerCase();
-  if (z.typ === "pdf" || z.typ === "pdf-odkaz" || ct.includes("pdf")) {
+  if (ct.includes("pdf")) {
     const buf = Buffer.from(await res.arrayBuffer());
     if (buf.length > 4_000_000) throw new Error("PDF je príliš veľké");
     return { typ: "pdf", mime: "application/pdf", base64: buf.toString("base64"), url };
@@ -57,7 +57,6 @@ async function zdrojNaVstup(z) {
   return { typ: "text", text: naText(await res.text()), url };
 }
 
-// hrubé očistenie HTML na čitateľný text — AI si s tým poradí
 function naText(html) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -73,33 +72,49 @@ function naText(html) {
     .slice(0, 30000);
 }
 
-/* ---------- beh: skúšaj zdroje po rade, kým jeden nevyjde ---------- */
+/* ---------- doterajší obsah, aby sa ručné opravy nezmazali ---------- */
+let stare = {};
+try {
+  const p = JSON.parse(await readFile("data/menu.json", "utf8"));
+  if (p.datum === DATUM) for (const r of p.restauracie) stare[r.id] = r;
+} catch { /* prvý beh alebo iný deň — nevadí */ }
+
+/* ---------- beh ---------- */
 const restauracie = JSON.parse(await readFile("scraper/restauracie.json", "utf8"));
 const vysledok = [];
 
 for (const r of restauracie) {
   const zaklad = { id: r.id, nazov: r.nazov, adresa: r.adresa, cas: r.cas, url: r.url };
-  let menu = null, chyby = [];
+  let menu = null, sposob = "";
+  const chyby = [];
 
-  for (const z of r.zdroje) {
+  for (const z of r.zdroje || []) {
+    if (z.typ === "rucne") { chyby.push("rucne: dopĺňa sa cez admin"); continue; }
     try {
-      const vstup = await zdrojNaVstup({ ...z, id: r.id });
-      const m = vstup.hotove ?? await extrahuj(r, vstup);
-      if (m.stav === "ok" && (m.jedla?.length || m.polievka)) { menu = m; break; }
+      const vstup = await zdrojNaVstup(z);
+      const m = await extrahuj(r, vstup);
+      if (m.stav === "ok" && (m.jedla.length || m.polievky.length)) {
+        menu = m; sposob = vstup.sposob || z.typ; break;
+      }
       if (m.stav === "zatvorene") { menu = m; break; }
-      chyby.push(`${z.typ}: prázdne menu`);
+      chyby.push(`${z.typ}: menu pre ${DEN} sa nenašlo`);
     } catch (e) {
       chyby.push(`${z.typ}: ${e.message}`);
     }
   }
 
-  if (menu) {
-    vysledok.push({ ...zaklad, ...menu });
-    console.log(`✓ ${r.nazov} — ${menu.jedla?.length ?? 0} jedál`);
+  // Automatika zlyhala — ak už dnes existuje ručne doplnené menu, necháme ho.
+  if (!menu && stare[r.id]?.stav === "ok") {
+    menu = { stav: "ok", polievky: stare[r.id].polievky || [], jedla: stare[r.id].jedla || [] };
+    console.log(`= ${r.nazov} — ponechané dnešné ručné menu`);
+  } else if (menu) {
+    console.log(`✓ ${r.nazov} — ${menu.polievky.length} pol. + ${menu.jedla.length} jedál (${sposob})`);
   } else {
-    vysledok.push({ ...zaklad, stav: "chyba", polievka: null, jedla: [] });
+    menu = { stav: "chyba", polievky: [], jedla: [] };
     console.log(`✗ ${r.nazov} — ${chyby.join(" | ")}`);
   }
+
+  vysledok.push({ ...zaklad, ...menu });
 }
 
 await writeFile("data/menu.json", JSON.stringify({
@@ -108,4 +123,4 @@ await writeFile("data/menu.json", JSON.stringify({
   restauracie: vysledok
 }, null, 2));
 
-console.log(`\nHotovo: ${vysledok.filter(r => r.stav === "ok").length}/${vysledok.length} úspešných.`);
+console.log(`\nHotovo: ${vysledok.filter(r => r.stav === "ok").length}/${vysledok.length}.`);
