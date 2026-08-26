@@ -1,0 +1,66 @@
+name: Stiahnuť denné menu
+
+on:
+  schedule:
+    # 08:00 UTC = 10:00 v Bratislave počas letného času.
+    # V zimnom čase (koniec októbra – koniec marca) to vyjde na 09:00.
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch:        # umožní spustiť ručne z webu GitHubu
+
+permissions:
+  contents: write
+
+concurrency:
+  group: menu
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Nainštalovať závislosti
+        run: npm install
+
+      - name: Nainštalovať prehliadač
+        run: npx playwright install --with-deps chromium
+
+      - name: Stiahnuť a spracovať menu
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scraper/scrape.mjs
+
+      - name: Uložiť výsledok do repa
+        run: |
+          git config user.name "menu-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/menu.json
+          git diff --staged --quiet || git commit -m "menu $(date +%F)"
+          git push
+
+      # Poistka beží AŽ PO uložení. Keby bežala pred ním, jeden zlyhaný
+      # podnik by zhodil celý beh a na web by sa nedostali ani tie,
+      # ktoré vyšli. Takto sa uloží všetko, čo sa podarilo, a beh sa
+      # označí červeným — GitHub o tom pošle mail.
+      - name: Skontrolovať, koľko podnikov vyšlo
+        run: |
+          node -e '
+            const d = JSON.parse(require("fs").readFileSync("data/menu.json", "utf8"));
+            const ok = d.restauracie.filter(r => r.stav === "ok");
+            const zle = d.restauracie.filter(r => r.stav !== "ok");
+            console.log(`Načítané: ${ok.length}/${d.restauracie.length} pre ${d.datum}`);
+            if (zle.length) console.log("Nevyšlo: " + zle.map(r => r.nazov).join(", "));
+            const MIN = Number(process.env.MIN_PODNIKOV);
+            if (ok.length < MIN) {
+              console.error(`\nCHYBA: očakával som aspoň ${MIN} podnikov.`);
+              process.exit(1);
+            }
+          '
+        env:
+          MIN_PODNIKOV: 2
