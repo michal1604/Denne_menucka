@@ -1,0 +1,9 @@
+{
+  "name": "denne-menu",
+  "private": true,
+  "type": "module",
+  "description": "Sledovanie denného menu vybraných podnikov",
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}
