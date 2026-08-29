@@ -38,9 +38,10 @@
       {
         "typ": "prehliadac",
         "url": "https://soupa.sk/denne-menu-take-away.html",
-        "vyrez": "body"
+        "vyrez": "body",
+        "klikni": "Račianska"
       }
     ],
-    "poznamka": "Menu sa načítava cez JavaScript. Stránka obsahuje aj staré oznamy o zatvorení z minulých rokov — riaď sa iba dnešným dátumom, staré oznamy ignoruj. Ceny bývajú uvedené ako '0,60 € / 2,80 €' — polievka k menu a samostatne."
+    "poznamka": "Stránka je denná (jeden deň, nie týždeň) a členená podľa sekcií. Ber IBA sekcie 'Polievky' a 'Hlavné jedlá'. Sekcie 'Fašírky', 'Šaláty', 'Koláče a pečivo' a 'Dezerty' sú prílohy a doplnky, tie vynechaj. Jedlá nie sú číslované — očísluj ich v poradí. Pod každým názvom je zoznam surovín, ten do názvu nepatrí. Polievky majú dve ceny (0,4 l a 0,3 l) — použi menšiu porciu. Alergény sú malé čísla hneď za názvom jedla."
   }
 ]

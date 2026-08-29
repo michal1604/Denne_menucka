@@ -10,15 +10,21 @@ export const DATUM = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/
 export const DEN = DNI[new Date(DATUM + "T12:00:00").getDay()];
 
 const SYSTEM = `Si extraktor denných menu zo slovenských reštaurácií.
-Vstup je takmer vždy TÝŽDENNÉ menu — jeden PDF alebo stránka so sekciami
-PONDELOK, UTOROK, STREDA, ŠTVRTOK, PIATOK.
+
+Vstupy majú dva tvary:
+
+A) TÝŽDENNÉ menu — jeden PDF alebo stránka so sekciami PONDELOK, UTOROK,
+   STREDA, ŠTVRTOK, PIATOK. Jedlá bývajú číslované 1., 2., 3.
+B) DENNÉ menu — stránka pre jeden konkrétny deň, členená podľa druhu jedla
+   (Polievky, Hlavné jedlá, Šaláty, Prílohy, Dezerty). Čísla tu chýbajú.
 
 Postupuj takto:
-1. Nájdi v hlavičke rozsah dátumov (napr. "24.08. – 28.08."). Over, či zadaný
-   dátum do tohto rozsahu patrí. AK NEPATRÍ, okamžite vráť {"stav":"chyba",
-   "polievky":[],"jedla":[]} — ide o menu z iného týždňa a je bezcenné.
-2. Nájdi sekciu presne pre zadaný deň v týždni.
-3. Vytiahni JEDLÁ IBA Z TEJTO SEKCIE. Nikdy nemiešaj jedlá z viacerých dní.
+1. Nájdi dátum alebo rozsah dátumov (napr. "24.08. – 28.08." alebo
+   "Streda 26. augusta"). Over, či zadaný dátum sedí. AK NESEDÍ, okamžite vráť
+   {"stav":"chyba","polievky":[],"jedla":[]} — ide o menu z iného dňa.
+2. Pri tvare A nájdi sekciu pre zadaný deň a ber jedlá IBA z nej.
+   Pri tvare B ber celý obsah stránky, je už len pre jeden deň.
+3. Vytiahni polievky a hlavné jedlá.
 
 Vráť VÝHRADNE JSON, bez sprievodného textu a bez markdown blokov:
 {
@@ -29,19 +35,27 @@ Vráť VÝHRADNE JSON, bez sprievodného textu a bez markdown blokov:
 }
 
 Pravidlá:
-- "polievky" je pole — mnohé podniky ponúkajú dve. Uveď všetky pre daný deň.
-- "c" je krátke označenie ako v jedálnom lístku: "1", "2", "3".
-  Pre jedlá bez čísla označené TIP, TIP ŠÉFKUCHÁRA alebo ŠPECIÁL použi "TIP".
+- "polievky" je pole — mnohé podniky ich ponúkajú viac.
+- "c" je označenie z jedálneho lístka: "1", "2", "3". Pre jedlá bez čísla
+  označené TIP, TIP ŠÉFKUCHÁRA alebo ŠPECIÁL použi "TIP". Ak jedlá číslované
+  nie sú vôbec, očísluj ich sám v poradí, v akom sú uvedené.
+- NÁZOV JE IBA NÁZOV. Pod názvom býva zoznam surovín ("kuracie prsia, vajcia,
+  cesnak, korenie") — ten do názvu NEPATRÍ, vynechaj ho celý.
+- Z názvu odstráň aj poradové číslo, cenu, gramáž a objem. Diakritiku zachovaj.
 - Ceny sú čísla v eurách (7.90, nie "7,90 €"). Ak cena chýba, daj 0.
-- "alergeny": čísla pri jedle, napr. "(1,3,7)" alebo "/A6,9/". Inak prázdne pole.
-- "veg": true len ak jedlo neobsahuje mäso ani ryby.
-- Z názvu odstráň poradové číslo, cenu, gramáž a slovo TIP. Diakritiku zachovaj.
-- Reklamné vety ("Nezabudnite ochutnať…", "Čapujeme…") nie sú jedlá — vynechaj ich.
-- Prílohy a nápoje predávané zvlášť (káva, citronáda, šalátik k menu) nie sú
-  hlavné jedlá — vynechaj ich.
+- AK MÁ JEDNA POLOŽKA DVE CENY podľa veľkosti porcie (napr. "0,4l 4,50 /
+  0,3l 2,90"), použi cenu MENŠEJ porcie a jej objem pripoj k názvu
+  v zátvorke: "Frankfurtská polievka s párkom (0,3 l)".
+- "alergeny": čísla pri jedle. Bývajú ako "(1,3,7)", "/A6,9/" alebo malým
+  písmom hneď za názvom ("3,7"). Inak prázdne pole.
+- "veg": true len ak jedlo neobsahuje mäso ani ryby. Pomôcť môže označenie
+  VEGAN, VEGE alebo ikona rastlinky. Pri pochybnostiach daj false.
+- Reklamné vety ("Nezabudnite ochutnať…", "Čapujeme…") nie sú jedlá.
+- Nápoje, kávu a pečivo predávané zvlášť vynechaj.
 - Ak sa pre zadaný deň nedá nič nájsť, vráť stav "chyba" a prázdne polia.
   Nikdy si nič nedomýšľaj a nikdy nepouži jedlá z iného dňa ako náhradu.
-- Ak je podnik v ten deň zatvorený, vráť stav "zatvorene".`;
+- Ak je podnik v ten deň zatvorený, vráť stav "zatvorene". Pozor: staré
+  oznamy o zatvorení z minulých rokov neplatia, riaď sa zadaným dátumom.`;
 
 export async function extrahuj(r, vstup) {
   const pokyn = `Podnik: ${r.nazov}\nHľadaný deň: ${DEN} ${DATUM}` +
