@@ -1,7 +1,7 @@
 {
-  "datum": "2026-08-31",
-  "den": "pondelok",
-  "aktualizovane": "2026-08-31T08:10:18.859Z",
+  "datum": "2026-09-01",
+  "den": "utorok",
+  "aktualizovane": "2026-09-01T08:19:08.106Z",
   "restauracie": [
     {
       "id": "srdcovka",
@@ -19,86 +19,9 @@
       "adresa": "Legionárska 8",
       "cas": "11:00 – 14:00",
       "url": "https://www.spilkarestaurant.sk/",
-      "stav": "ok",
-      "polievky": [
-        {
-          "nazov": "Lusková polievka so zemiakmi (0,25 l)",
-          "cena": 1.99,
-          "alergeny": [
-            7,
-            9,
-            12
-          ]
-        },
-        {
-          "nazov": "Hovädzí vývar s rezancami, zeleninou, mäsom (0,25 l)",
-          "cena": 1.99,
-          "alergeny": [
-            1,
-            3,
-            9
-          ]
-        }
-      ],
-      "jedla": [
-        {
-          "c": "TIP",
-          "nazov": "Burger s trhaným hovädzím mäskom, cheddarom, šalátom coleslaw a hranolkami",
-          "cena": 9.9,
-          "alergeny": [
-            1,
-            3,
-            7,
-            10
-          ],
-          "veg": false
-        },
-        {
-          "c": "TIP",
-          "nazov": "Bravčová panenka sous-vide s gratinovanými zemiakmi a hríbovou omáčkou",
-          "cena": 9.9,
-          "alergeny": [
-            3,
-            7,
-            9
-          ],
-          "veg": false
-        },
-        {
-          "c": "1",
-          "nazov": "Butter chicken curry s kokosovým mliekom, koriandrom a basmati ryžou",
-          "cena": 7.9,
-          "alergeny": [
-            9
-          ],
-          "veg": false
-        },
-        {
-          "c": "2",
-          "nazov": "Ľadový šalát s kuracím mäskom, krutónmi, slaninkou a cézar dresingom s parmezánom",
-          "cena": 7.9,
-          "alergeny": [
-            1,
-            3,
-            4,
-            7,
-            10
-          ],
-          "veg": false
-        },
-        {
-          "c": "3",
-          "nazov": "Vyprážaný syr s hranolkami a našou domácou tatárskou omáčkou",
-          "cena": 7.9,
-          "alergeny": [
-            1,
-            3,
-            7,
-            10
-          ],
-          "veg": true
-        }
-      ]
+      "stav": "zatvorene",
+      "polievky": [],
+      "jedla": []
     },
     {
       "id": "soupa",
