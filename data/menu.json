@@ -1,7 +1,7 @@
 {
-  "datum": "2026-09-01",
-  "den": "utorok",
-  "aktualizovane": "2026-09-01T08:19:08.106Z",
+  "datum": "2026-09-02",
+  "den": "streda",
+  "aktualizovane": "2026-09-02T08:21:55.564Z",
   "restauracie": [
     {
       "id": "srdcovka",
@@ -19,9 +19,71 @@
       "adresa": "Legionárska 8",
       "cas": "11:00 – 14:00",
       "url": "https://www.spilkarestaurant.sk/",
-      "stav": "zatvorene",
-      "polievky": [],
-      "jedla": []
+      "stav": "ok",
+      "polievky": [
+        {
+          "nazov": "Fazuľová polievka s klobáskou (0,25 l)",
+          "cena": 1.99,
+          "alergeny": [
+            9
+          ]
+        },
+        {
+          "nazov": "Hovädzí vývar s rezancami, zeleninou, mäsom (0,25 l)",
+          "cena": 1.99,
+          "alergeny": [
+            1,
+            3,
+            9
+          ]
+        }
+      ],
+      "jedla": [
+        {
+          "c": "TIP",
+          "nazov": "Risotto s cuketou, s kúskami bravčovej panenky a parmezánom",
+          "cena": 8.9,
+          "alergeny": [
+            7,
+            9
+          ],
+          "veg": false
+        },
+        {
+          "c": "1",
+          "nazov": "Kuracie prsia zapekané s paradajkou a mozzarellou, s dusenou ryžou a prírodnou mäsovou omáčkou",
+          "cena": 7.9,
+          "alergeny": [
+            7,
+            9
+          ],
+          "veg": false
+        },
+        {
+          "c": "2",
+          "nazov": "Šošovicový prívarok s pečenou klobáskou a so zemiakmi na kyslo",
+          "cena": 7.9,
+          "alergeny": [
+            1,
+            7,
+            9,
+            12
+          ],
+          "veg": false
+        },
+        {
+          "c": "3",
+          "nazov": "Vyprážaný syr s hranolkami a našou domácou tatárskou omáčkou",
+          "cena": 7.9,
+          "alergeny": [
+            1,
+            3,
+            7,
+            10
+          ],
+          "veg": true
+        }
+      ]
     },
     {
       "id": "soupa",
