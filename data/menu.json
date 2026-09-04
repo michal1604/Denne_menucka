@@ -1,7 +1,7 @@
 {
-  "datum": "2026-09-03",
-  "den": "štvrtok",
-  "aktualizovane": "2026-09-03T08:19:12.792Z",
+  "datum": "2026-09-04",
+  "den": "piatok",
+  "aktualizovane": "2026-09-04T08:25:20.554Z",
   "restauracie": [
     {
       "id": "srdcovka",
@@ -22,12 +22,11 @@
       "stav": "ok",
       "polievky": [
         {
-          "nazov": "Paradajková polievka so syrom",
+          "nazov": "Zemiaková na kyslo s údeným mäskom",
           "cena": 1.99,
           "alergeny": [
             7,
-            9,
-            12
+            9
           ]
         },
         {
@@ -43,9 +42,22 @@
       "jedla": [
         {
           "c": "TIP",
-          "nazov": "Risotto s cuketou, s kúskami bravčovej panenky a parmezánom",
-          "cena": 8.9,
+          "nazov": "Burger s trhaným hovädzím mäskom, cheddarom, šalátom coleslaw a hranolkami",
+          "cena": 9.9,
           "alergeny": [
+            1,
+            3,
+            7,
+            10
+          ],
+          "veg": false
+        },
+        {
+          "c": "TIP",
+          "nazov": "Bravčová panenka sous-vide s gratinovanými zemiakmi a hríbovou omáčkou",
+          "cena": 9.9,
+          "alergeny": [
+            3,
             7,
             9
           ],
@@ -53,7 +65,7 @@
         },
         {
           "c": "1",
-          "nazov": "Černohorský rezeň z kuracieho mäska zapekaný so syrom, pečené zemiaky a tatárska omáčka",
+          "nazov": "Bravčový rezeň marinovaný v pive, so zemiakovým šalátom s cibuľkou a kyslou uhorkou",
           "cena": 7.9,
           "alergeny": [
             1,
@@ -65,10 +77,11 @@
         },
         {
           "c": "2",
-          "nazov": "Grilovaná treska na masle so zemiakovou kašou a bylinkovou omáčkou",
+          "nazov": "Špagety so smotanovo-cesnakovou omáčkou a vajíčkom s možnosťou podávať aj so slaninkou",
           "cena": 7.9,
           "alergeny": [
-            4,
+            1,
+            3,
             7,
             9
           ],
@@ -76,7 +89,7 @@
         },
         {
           "c": "3",
-          "nazov": "Vyprážaný syr s maslovými zemiakmi a našou domácou tatárskou omáčkou",
+          "nazov": "Vyprážaný syr s hranolkami a našou domácou tatárskou omáčkou",
           "cena": 7.9,
           "alergeny": [
             1,
