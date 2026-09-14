@@ -1,7 +1,7 @@
 {
-  "datum": "2026-09-11",
-  "den": "piatok",
-  "aktualizovane": "2026-09-11T08:19:05.817Z",
+  "datum": "2026-09-14",
+  "den": "pondelok",
+  "aktualizovane": "2026-09-14T08:19:25.187Z",
   "restauracie": [
     {
       "id": "srdcovka",
@@ -19,86 +19,9 @@
       "adresa": "Legionárska 8",
       "cas": "11:00 – 14:00",
       "url": "https://www.spilkarestaurant.sk/",
-      "stav": "ok",
-      "polievky": [
-        {
-          "nazov": "Frankfurtská polievka s párkom",
-          "cena": 1.99,
-          "alergeny": [
-            9
-          ]
-        },
-        {
-          "nazov": "Hovädzí vývar s rezancami, zeleninou, mäsom",
-          "cena": 1.99,
-          "alergeny": [
-            1,
-            3,
-            9
-          ]
-        }
-      ],
-      "jedla": [
-        {
-          "c": "TIP",
-          "nazov": "Burger s hovädzím mäskom, cheddarom, volským okom, hranolkami a bbq majonézou",
-          "cena": 9.9,
-          "alergeny": [
-            1,
-            3,
-            7,
-            10
-          ],
-          "veg": false
-        },
-        {
-          "c": "TIP",
-          "nazov": "Bryndzové halušky s údeným hovädzím jazykom, slaninkou a pažítkou",
-          "cena": 9.9,
-          "alergeny": [
-            1,
-            3,
-            7,
-            9
-          ],
-          "veg": false
-        },
-        {
-          "c": "1",
-          "nazov": "Fish and Chips z tresky s hranolkami a našou domácou tatárskou omáčkou",
-          "cena": 7.9,
-          "alergeny": [
-            1,
-            3,
-            4,
-            10
-          ],
-          "veg": false
-        },
-        {
-          "c": "2",
-          "nazov": "Paradajkové rizoto s baby mozzarellou a rukolou",
-          "cena": 7.9,
-          "alergeny": [
-            7,
-            9,
-            12
-          ],
-          "veg": true
-        },
-        {
-          "c": "3",
-          "nazov": "Vyprážaný syr s maslovými zemiakmi a našou domácou tatárskou omáčkou",
-          "cena": 7.9,
-          "alergeny": [
-            1,
-            3,
-            7,
-            10
-          ],
-          "veg": true
-        }
-      ]
+      "stav": "chyba",
+      "polievky": [],
+      "jedla": []
     },
     {
       "id": "soupa",
